@@ -40,7 +40,7 @@ def list_instances(project):
 @instances.command('start')
 @click.option('--project', default=None,
     help='Only instances for project')
-def stop_instances(project):
+def start_instances(project):
     "Start EC2 instances"
     instances = filter_instances(project)
 
@@ -48,7 +48,7 @@ def stop_instances(project):
         print("Starting {0}...".format(i.id))
         i.start()
 
-    return #send stop command
+    return #send start command
 
 @instances.command('stop')
 @click.option('--project', default=None,
