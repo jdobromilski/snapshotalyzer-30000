@@ -83,10 +83,17 @@ def instances():
     """Commands for instances"""
 
 @instances.command('reboot')
+@click.option('--force', 'forceflag', default=False, is_flag=True,
+    help="Force EC2 instances Reboot if project not defined")
 @click.option('--project', default=None,
     help="Reboot EC2 instances for projects (tag Project:<name>)")
-def reboot_instances(project):
+
+def reboot_instances(project,forceflag):
     "Reboot EC2 instances"
+    if not project and not forceflag:
+        print("No project defined, breaking")
+        return
+
     instances = filter_instances(project)
 
     for i in instances:
