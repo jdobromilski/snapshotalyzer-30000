@@ -82,6 +82,28 @@ def list_volumes(project):
 def instances():
     """Commands for instances"""
 
+@instances.command('reboot')
+@click.option('--project', default=None,
+    help="Reboot EC2 instances for projects (tag Project:<name>)")
+def reboot_instances(project):
+    "Reboot EC2 instances"
+    instances = filter_instances(project)
+
+    for i in instances:
+        print("Stopping {0}...".format(i.id))
+
+        i.stop()
+        i.wait_until_stopped()
+        i.start()
+        i.wait_until_running()
+
+        print("Started {0}...".format(i.id))
+
+    print("Job's done!")
+
+    return
+    ###
+
 @instances.command('snapshot')
 @click.option('--project', default=None,
     help="Create snapshots of all volumes for projects (tag Project:<name>)")
