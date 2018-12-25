@@ -112,10 +112,16 @@ def reboot_instances(project,forceflag):
     ###
 
 @instances.command('snapshot')
+@click.option('--force', 'forceflag', default=False, is_flag=True,
+    help="Force All EC2 instances Snapshot if project not defined")
 @click.option('--project', default=None,
     help="Create snapshots of all volumes for projects (tag Project:<name>)")
-def create_snapshots(project):
+def create_snapshots(project,forceflag):
     "Create snapshots for EC2 instances"
+    if not project and not forceflag:
+        print("No project defined, breaking")
+        return
+
     instances = filter_instances(project)
 
     for i in instances:
@@ -160,10 +166,16 @@ def list_instances(project):
     return
 
 @instances.command('start')
+@click.option('--force', 'forceflag', default=False, is_flag=True,
+    help="Force All EC2 instances Start if project not defined")
 @click.option('--project', default=None,
     help='Only instances for project')
-def start_instances(project):
+def start_instances(project,forceflag):
     "Start EC2 instances"
+    if not project and not forceflag:
+        print("No project defined, breaking")
+        return
+
     instances = filter_instances(project)
 
     for i in instances:
@@ -177,10 +189,16 @@ def start_instances(project):
     return #send start command
 
 @instances.command('stop')
+@click.option('--force', 'forceflag', default=False, is_flag=True,
+    help="Force All EC2 instances Stop if project not defined")
 @click.option('--project', default=None,
     help='Only instances for project')
-def stop_instances(project):
+def stop_instances(project,forceflag):
     "Stop EC2 instances"
+    if not project and not forceflag:
+        print("No project defined, breaking")
+        return
+        
     instances = filter_instances(project)
 
     for i in instances:
