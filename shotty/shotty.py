@@ -150,7 +150,13 @@ def create_snapshots(project,forceflag):
             if has_pending_snapshot(v):
                 print("   Skipping {0}, snapshot already in progress".format(v.id))
             print("   Creating snapshot of {0}".format(v.id))
-            v.create_snapshot(Description="Created by SnapshotAlyzer 30000")
+            try:
+                v.create_snapshot(Description="Created by SnapshotAlyzer 30000")
+            except botocore.exceptions.ClientError as e:
+                print(" Could not take snapshot {0}. ".format(i.id) + str(e))
+                continue
+
+
 
         print("Starting {0}...".format(i.id))
 
