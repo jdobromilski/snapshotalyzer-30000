@@ -3,8 +3,8 @@ import botocore #imported to handle aws exceptions -
                 #that's where the exceptions come from
 import click
 
-session = boto3.Session(profile_name='shotty')
-ec2 = session.resource('ec2')
+session = None
+ec2 = None
 
 def filter_instances(project):
     if project:
@@ -20,8 +20,19 @@ def has_pending_snapshot(volume):
     return snapshots and snapshots[0].state == 'pending'
 
 @click.group()
-def cli():
+@click.option('--profile', 'profile', default='shotty',
+    help="Define profile for AWS connection (Profile:<name>)")
+def cli(profile):
     """Shotty manages snapshots"""
+    global session, ec2
+
+    session_cfg = {}
+    if profile:
+        session_cfg['profile_name'] = profile
+
+    session = boto3.Session(**session_cfg)
+    ec2 = session.resource('ec2')
+
 
 @cli.group('volumes')
 def volumes():
@@ -198,7 +209,7 @@ def stop_instances(project,forceflag):
     if not project and not forceflag:
         print("No project defined, breaking")
         return
-        
+
     instances = filter_instances(project)
 
     for i in instances:
