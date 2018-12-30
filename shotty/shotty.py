@@ -22,13 +22,18 @@ def has_pending_snapshot(volume):
 @click.group()
 @click.option('--profile', 'profile', default='shotty',
     help="Define profile for AWS connection (Profile:<name>)")
-def cli(profile):
+@click.option('--region', 'region', default='eu-west-1',
+    help="Define AWS region (Region:<name>)")
+def cli(profile,region):
     """Shotty manages snapshots"""
     global session, ec2
 
     session_cfg = {}
     if profile:
         session_cfg['profile_name'] = profile
+
+    if region:
+        session_cfg['region_name'] = region
 
     session = boto3.Session(**session_cfg)
     ec2 = session.resource('ec2')
