@@ -76,9 +76,16 @@ def list_snapshots(project, list_all):
 @volumes.command('list')
 @click.option('--project', default=None,
     help="Only instances for projects (tag Project:<name>)")
-def list_volumes(project):
+@click.option('--instance', default=None,
+    help="Only specified instance (InstanceID:<name>)")
+
+def list_volumes(project,instance):
     "list EC2 volumes"
-    instances = filter_instances(project)
+    if instance:
+        filters = [{'Name':'instance-id', 'Values':[instance]}]
+        instances = ec2.instances.filter(Filters=filters)
+    else:
+        instances = filter_instances(project)
 
     for i in instances:
         tags = { t['Key']: t['Value'] for t in i.tags or [] }
