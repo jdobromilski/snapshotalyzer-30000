@@ -22,7 +22,7 @@ def has_pending_snapshot(volume):
 @click.group()
 @click.option('--profile', 'profile', default='shotty',
     help="Define profile for AWS connection (Profile:<name>)")
-@click.option('--region', 'region', default='eu-west-1',
+@click.option('--region', 'region',
     help="Define AWS region (Region:<name>)")
 def cli(profile,region):
     """Shotty manages snapshots"""
